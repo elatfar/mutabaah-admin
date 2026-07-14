@@ -1,12 +1,9 @@
 /**
- * Global Route Guard
- * - Redirects unauthenticated users to /login
- * - Redirects already-authenticated users away from /login
+ * Global Route Guard — runs on every navigation
  */
 export default defineNuxtRouteMiddleware((to) => {
   const authStore = useAuthStore()
 
-  // Hydrate from localStorage on first load (client-side)
   if (import.meta.client && !authStore.token) {
     authStore.hydrate()
   }

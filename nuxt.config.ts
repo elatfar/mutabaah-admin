@@ -6,6 +6,12 @@ export default defineNuxtConfig({
     '@pinia/nuxt'
   ],
 
+  runtimeConfig: {
+    public: {
+      apiBase: 'http://127.0.0.1:8787' // overridden by NUXT_PUBLIC_API_BASE in .env
+    }
+  },
+
   devtools: {
     enabled: true
   },
@@ -15,6 +21,15 @@ export default defineNuxtConfig({
   router: {
     options: {
       scrollBehaviorType: 'smooth'
+    }
+  },
+
+  nitro: {
+    devProxy: {
+      '/api': {
+        target: 'http://127.0.0.1:8787/api',
+        changeOrigin: true
+      }
     }
   },
 

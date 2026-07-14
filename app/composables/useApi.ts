@@ -1,12 +1,19 @@
 /**
- * Composable: useApi
- * Wraps $fetch with base URL, Authorization header injection,
- * and automatic 401/403 → logout + redirect handling.
+ * useApi — wraps $fetch with:
+ * - Base URL from env
+ * - Auto Bearer token injection
+ * - 401/403 → logout + redirect
+ *
+ * IMPORTANT: Call this inside an action/function, not at store setup root level.
+ * useRouter() requires an active Nuxt app context.
  */
 
-const BASE_URL = 'http://127.0.0.1:8787'
+function getApiBase(): string {
+  return (import.meta.env.NUXT_PUBLIC_API_BASE as string) || 'http://127.0.0.1:8787'
+}
 
 export function useApi() {
+  // These are safe to call here because useApi() is called lazily inside actions
   const authStore = useAuthStore()
   const router = useRouter()
 
@@ -24,10 +31,7 @@ export function useApi() {
     }
 
     try {
-      return await $fetch<T>(`${BASE_URL}${path}`, {
-        ...options,
-        headers
-      })
+      return await $fetch<T>(`${getApiBase()}${path}`, { ...options, headers })
     }
     catch (err: unknown) {
       const status = (err as { status?: number; statusCode?: number })?.status
@@ -38,7 +42,6 @@ export function useApi() {
         await router.push('/login')
         throw err
       }
-
       throw err
     }
   }

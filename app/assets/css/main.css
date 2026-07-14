@@ -94,3 +94,13 @@ a:focus-visible {
   opacity: 0;
   transform: translateY(-6px);
 }
+
+/* Ensure text is crisp */
+html {
+  text-rendering: optimizeLegibility;
+}
+
+/* Remove default button outline in favor of our custom focus */
+button, [role="button"] {
+  cursor: pointer;
+}

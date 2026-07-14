@@ -12,7 +12,7 @@ const breadcrumbMap: Record<string, string> = {
   '/pengaturan': 'Pengaturan'
 }
 
-const currentPage = computed(() => {
+const pageTitle = computed(() => {
   if (route.path === '/') {
     if (authStore.isAdmin) return 'Dashboard Admin'
     if (authStore.isTeacher) return 'Panel Guru'
@@ -22,61 +22,53 @@ const currentPage = computed(() => {
 })
 
 const today = computed(() =>
-  new Date().toLocaleDateString('id-ID', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
+  new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
 )
 </script>
 
 <template>
-  <header class="sticky top-0 z-20 flex items-center justify-between px-6 py-3.5 bg-white/85 backdrop-blur-md border-b border-slate-200/80">
-    <!-- Left: Breadcrumb -->
-    <div class="flex items-center gap-2 text-sm">
-      <span class="text-slate-400 text-xs">Mutaba'ah</span>
-      <UIcon name="i-lucide-chevron-right" class="w-3.5 h-3.5 text-slate-300" />
-      <span class="font-semibold text-sm" style="color: var(--color-burgundy-700);">{{ currentPage }}</span>
+  <header class="sticky top-0 z-20 flex items-center justify-between h-16 px-6 bg-white border-b border-slate-200">
+
+    <!-- Left -->
+    <div class="flex items-center gap-3">
+      <div>
+        <h1 class="text-base font-bold text-slate-900 leading-none">{{ pageTitle }}</h1>
+        <p class="text-xs text-slate-400 mt-0.5 capitalize leading-none">{{ today }}</p>
+      </div>
     </div>
 
-    <!-- Right: Actions -->
-    <div class="flex items-center gap-1.5">
-      <!-- Date pill -->
-      <div class="hidden md:flex items-center gap-1.5 text-xs text-slate-400 bg-slate-100 px-3 py-1.5 rounded-full mr-1">
-        <UIcon name="i-lucide-calendar" class="w-3.5 h-3.5" />
-        {{ today }}
-      </div>
-
-      <!-- Notifications -->
-      <div class="relative">
-        <UButton
-          icon="i-lucide-bell"
-          variant="ghost"
-          color="neutral"
-          size="sm"
-          aria-label="Notifikasi"
-        />
+    <!-- Right -->
+    <div class="flex items-center gap-2">
+      <!-- Notification bell -->
+      <button
+        class="relative w-9 h-9 flex items-center justify-center rounded-xl hover:bg-slate-100 transition-colors"
+        aria-label="Notifikasi"
+      >
+        <UIcon name="i-lucide-bell" class="w-4.5 h-4.5 text-slate-500" />
         <span
-          class="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full"
+          class="absolute top-2 right-2 w-2 h-2 rounded-full border-2 border-white"
           style="background-color: var(--color-burgundy-500);"
         />
-      </div>
+      </button>
 
-      <UDivider orientation="vertical" class="h-5 mx-1" />
+      <!-- Divider -->
+      <div class="w-px h-6 bg-slate-200 mx-1" />
 
-      <!-- Avatar + name -->
-      <div class="flex items-center gap-2 cursor-pointer hover:bg-slate-100 rounded-lg px-2 py-1 transition-colors">
-        <UAvatar
-          :text="(authStore.user?.name ?? 'U').slice(0, 2).toUpperCase()"
-          size="xs"
-          :ui="{ fallback: 'font-semibold text-xs' }"
-          :style="`background-color: var(--color-burgundy-700); color: white;`"
-        />
-        <span class="hidden sm:block text-sm font-medium text-slate-700">
-          {{ authStore.user?.name?.split(' ')[0] ?? 'Pengguna' }}
-        </span>
-        <UIcon name="i-lucide-chevron-down" class="w-3.5 h-3.5 text-slate-400" />
+      <!-- User chip -->
+      <div
+        class="flex items-center gap-2.5 pl-1 pr-3 py-1.5 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200"
+      >
+        <div
+          class="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white shrink-0"
+          style="background: linear-gradient(135deg, var(--color-burgundy-700), var(--color-burgundy-500));"
+        >
+          {{ (authStore.user?.name ?? 'U').slice(0, 2).toUpperCase() }}
+        </div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-semibold text-slate-800 leading-none">{{ authStore.user?.name?.split(' ')[0] ?? 'Pengguna' }}</p>
+          <p class="text-xs leading-none mt-0.5" style="color: var(--color-burgundy-500);">{{ authStore.user?.role }}</p>
+        </div>
+        <UIcon name="i-lucide-chevron-down" class="w-3.5 h-3.5 text-slate-400 hidden sm:block" />
       </div>
     </div>
   </header>

@@ -1,31 +1,30 @@
 import { defineStore } from 'pinia'
 
 export interface Group {
-  id: string
+  id: number
   groupName: string
   joinCode: string
 }
 
 export interface ReportItem {
-  memberId: string
+  memberId: number
   memberName: string
   completedLogs: number
 }
 
 export const useGroupStore = defineStore('group', () => {
-  const { apiFetch } = useApi()
   const toast = useToast()
 
-  // ── State ────────────────────────────────────────────────────────────────
   const groups = ref<Group[]>([])
-  const activeGroupId = ref<string | null>(null)
+  const activeGroupId = ref<number | null>(null)
   const report = ref<ReportItem[]>([])
   const newJoinCode = ref<string | null>(null)
   const loading = ref(false)
   const reportLoading = ref(false)
+  const amalanLoading = ref(false)
 
-  // ── Actions ──────────────────────────────────────────────────────────────
   async function createGroup(groupName: string) {
+    const { apiFetch } = useApi()
     loading.value = true
     try {
       const data = await apiFetch<Group>('/api/group/create', {
@@ -45,7 +44,8 @@ export const useGroupStore = defineStore('group', () => {
     }
   }
 
-  async function fetchReport(groupId: string) {
+  async function fetchReport(groupId: number) {
+    const { apiFetch } = useApi()
     reportLoading.value = true
     activeGroupId.value = groupId
     try {
@@ -60,7 +60,8 @@ export const useGroupStore = defineStore('group', () => {
     }
   }
 
-  async function assignLeader(groupId: string, userId: string) {
+  async function assignLeader(groupId: number, userId: number) {
+    const { apiFetch } = useApi()
     try {
       await apiFetch('/api/group/assign-leader', {
         method: 'POST',
@@ -73,15 +74,28 @@ export const useGroupStore = defineStore('group', () => {
     }
   }
 
+  async function addGroupAmalan(groupId: number, name: string) {
+    const { apiFetch } = useApi()
+    amalanLoading.value = true
+    try {
+      await apiFetch(`/api/group/${groupId}/amalans`, {
+        method: 'POST',
+        body: { name }
+      })
+      toast.add({ title: 'Amalan kelompok ditambahkan', description: `"${name}" berhasil ditambahkan.`, color: 'success' })
+    }
+    catch {
+      toast.add({ title: 'Gagal menambah amalan kelompok', color: 'error' })
+      throw new Error('Failed')
+    }
+    finally {
+      amalanLoading.value = false
+    }
+  }
+
   return {
-    groups,
-    activeGroupId,
-    report,
-    newJoinCode,
-    loading,
-    reportLoading,
-    createGroup,
-    fetchReport,
-    assignLeader
+    groups, activeGroupId, report, newJoinCode,
+    loading, reportLoading, amalanLoading,
+    createGroup, fetchReport, assignLeader, addGroupAmalan
   }
 })
