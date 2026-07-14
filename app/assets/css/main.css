@@ -2,7 +2,7 @@
 @import "@nuxt/ui";
 
 @theme static {
-  --font-sans: 'Public Sans', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', 'Public Sans', sans-serif;
 
   --color-green-50: #EFFDF5;
   --color-green-100: #D9FBE8;
@@ -15,4 +15,82 @@
   --color-green-800: #016538;
   --color-green-900: #0A5331;
   --color-green-950: #052E16;
+  /* Burgundy theme tokens */
+  --color-burgundy-50: #fbf3f5;
+  --color-burgundy-100: #f4e4e7;
+  --color-burgundy-200: #e9c7cf;
+  --color-burgundy-300: #d99aa6;
+  --color-burgundy-400: #b86b7f;
+  --color-burgundy-500: #800020; /* base/default */
+  --color-burgundy-600: #6e001a;
+  --color-burgundy-700: #66001a; /* hover/darker */
+  --color-burgundy-800: #4b0013;
+  --color-burgundy-900: #2f000b;
+
+  /* Gold / Accent tokens */
+  --color-gold-50: #fffaf0;
+  --color-gold-100: #fff4e0;
+  --color-gold-200: #fbe5b8;
+  --color-gold-300: #f2d078;
+  --color-gold-400: #e6bb45;
+  --color-gold-500: #D4AF37; /* base/default */
+  --color-gold-600: #c79f2f;
+  --color-gold-700: #b89224; /* hover/darker */
+  --color-gold-800: #907018;
+  --color-gold-900: #664f0e;
+}
+
+/* Global focus rings and selection to match theme */
+:root {
+  color-scheme: light;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--color-gold-200);
+  color: #111827;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-burgundy-200);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-burgundy-400);
+}
+
+/* Focus ring override for form controls and interactive elements */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.18), 0 0 0 1.5px var(--color-burgundy-500);
+}
+
+/* Smooth page transitions */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(6px);
+}
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
 }
